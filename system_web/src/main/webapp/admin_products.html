@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechMart Admin - Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+<nav class="flex items-center justify-between p-5 bg-gray-800 shadow-md">
+    <div class="text-2xl font-bold text-white tracking-wide flex items-center gap-3">
+        TechMart Admin
+        <span class="bg-rose-500 text-white text-xs px-2.5 py-1 rounded font-semibold uppercase tracking-wider">Root Access</span>
+    </div>
+    <div class="flex gap-6 items-center text-sm font-semibold">
+        <a href="admin_dashboard.html" class="hover:text-gray-300 transition">Dashboard</a>
+        <a href="admin_products.html" class="bg-gray-700 px-4 py-2 rounded-lg text-white">Products</a>
+        <a href="admin_users.html" class="hover:text-gray-300 transition">Users</a>
+        <button id="logout-btn" class="text-red-400 hover:text-red-300 transition">Logout</button>
+    </div>
+</nav>
+
+<main class="max-w-6xl mx-auto p-6 mt-8 space-y-8">
+
+    <section class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700">
+        <h3 class="text-xl font-bold mb-6 text-white">Add New Product</h3>
+        <form id="add-product-form" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Product Name</label>
+                    <input type="text" id="add-p-name" placeholder="Name" required class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Price</label>
+                    <input type="number" id="add-p-price" step="0.01" placeholder="Price" required class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Description</label>
+                    <input type="text" id="add-p-desc" placeholder="Description" required class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Inventory</label>
+                    <input type="number" id="add-p-inv" placeholder="Inventory" required class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+            </div>
+            
+            <hr class="border-gray-700 my-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Image 1</label>
+                    <input type="file" id="add-img1" accept="image/*" class="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Image 2</label>
+                    <input type="file" id="add-img2" accept="image/*" class="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Image 3</label>
+                    <input type="file" id="add-img3" accept="image/*" class="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 rounded-lg transition text-sm mt-4">
+                Add Product
+            </button>
+        </form>
+        <div id="add-p-msg" class="text-sm mt-3 text-green-400"></div>
+    </section>
+
+    <section class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700">
+        <h3 class="text-xl font-bold mb-6 text-white">Catalog List</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="text-gray-400 border-b border-gray-700">
+                <tr>
+                    <th class="py-4 px-4 font-semibold">ID</th>
+                    <th class="py-4 px-4 font-semibold">Name</th>
+                    <th class="py-4 px-4 font-semibold">Price</th>
+                    <th class="py-4 px-4 font-semibold">Inventory</th>
+                    <th class="py-4 px-4 font-semibold">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="admin-products-table" class="divide-y divide-gray-700/50">
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<div id="edit-product-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-gray-700">
+        <button class="absolute top-4 right-5 text-gray-400 hover:text-white text-2xl" onclick="document.getElementById('edit-product-modal').classList.add('hidden')">&times;</button>
+        <h3 class="text-xl font-bold mb-6 text-white">Edit Product</h3>
+
+        <form id="edit-product-form" class="space-y-4">
+            <input type="hidden" id="edit-p-id">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-sm text-gray-400">Name</label>
+                    <input type="text" id="edit-p-name" required class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-sm text-gray-400">Price</label>
+                    <input type="number" id="edit-p-price" step="0.01" required class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-sm text-gray-400">Description</label>
+                    <input type="text" id="edit-p-desc" required class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-sm text-gray-400">Inventory</label>
+                    <input type="number" id="edit-p-inv" required class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:border-gray-400 text-white text-sm">
+                </div>
+            </div>
+
+            <hr class="border-gray-700 my-4">
+
+            <div class="space-y-1">
+                <label class="block text-sm text-gray-400">Update Image 1</label>
+                <input type="file" id="img1" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+            <div class="space-y-1">
+                <label class="block text-sm text-gray-400">Update Image 2</label>
+                <input type="file" id="img2" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+            <div class="space-y-1">
+                <label class="block text-sm text-gray-400">Update Image 3</label>
+                <input type="file" id="img3" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+
+            <button type="submit" class="w-full bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 rounded-lg transition mt-6">
+                Save Changes
+            </button>
+            <div id="edit-msg" class="text-center text-sm mt-2"></div>
+        </form>
+    </div>
+</div>
+
+<script src="js/admin_products.js"></script>
+</body>
+</html>

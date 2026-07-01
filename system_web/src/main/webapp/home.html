@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechMart Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <nav class="flex items-center justify-between p-5 bg-gray-800 shadow-md">
+        <div class="text-2xl font-bold text-white tracking-wide">TechMart</div>
+        <div class="flex gap-6 items-center text-sm font-semibold">
+            <span id="user-greeting" class="text-gray-400 font-normal">Welcome</span>
+            <a href="home.html" class="bg-gray-700 px-4 py-2 rounded-lg text-white">Home</a>
+            <a href="shop.html" class="hover:text-gray-300 transition">Shop</a>
+            <button id="nav-profile-btn" class="hover:text-gray-300 transition">My Profile</button>
+            <button id="cart-btn" class="hover:text-gray-300 transition">Cart (<span id="cart-count">0</span>)</button>
+            <button id="logout-btn" class="text-red-400 hover:text-red-300 transition">Logout</button>
+        </div>
+    </nav>
+
+    <main class="w-full">
+        <section
+            class="flex flex-col items-center justify-center text-center py-24 px-6 bg-gray-800/40 border-b border-gray-800">
+            <h1
+                class="text-5xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                Next-Gen Electronics
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-xl mb-10 checked:line-leading-relaxed">
+                Experience the future today. Browse our curated collection of premium smartphones, laptops, and smart
+                home devices at unbeatable prices.
+            </p>
+            <div class="flex gap-4">
+                <a href="shop.html"
+                    class="bg-white text-gray-900 hover:bg-gray-200 font-bold px-8 py-3.5 rounded-full transition text-lg shadow-lg shadow-white/5">
+                    Shop Collection
+                </a>
+                <a href="#features"
+                    class="border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white font-bold px-8 py-3.5 rounded-full transition text-lg">
+                    Learn More
+                </a>
+            </div>
+        </section>
+
+        <section id="features" class="max-w-6xl mx-auto my-16 px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="bg-gray-800 p-8 rounded-2xl border border-gray-700 text-center hover:border-gray-600 transition shadow-md">
+                    <h3 class="text-xl font-bold mb-3 text-white">Fast Delivery</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Same-day shipping on all orders placed before 2 PM.
+                        We partner with the best couriers.</p>
+                </div>
+                <div
+                    class="bg-gray-800 p-8 rounded-2xl border border-gray-700 text-center hover:border-gray-600 transition shadow-md">
+                    <h3 class="text-xl font-bold mb-3 text-white">Secure Payments</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Your transactions are protected with military-grade
+                        encryption and secure gateway routing.</p>
+                </div>
+
+                <div
+                    class="bg-gray-800 p-8 rounded-2xl border border-gray-700 text-center hover:border-gray-600 transition shadow-md">
+                    <h3 class="text-xl font-bold mb-3 text-white">Premium Quality</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Every product is rigorously tested and backed by
+                        our full 1-year hardware warranty.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-12 border-t border-gray-800 text-gray-500 text-sm mt-16">
+            <p>&copy; 2026 TechMart Online. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <div id="cart-modal"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md relative border border-gray-700">
+            <button class="close-btn absolute top-4 right-5 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <h3 class="text-xl font-bold mb-6 text-white">Your Shopping Cart</h3>
+            <div id="cart-items-list" class="space-y-4 max-h-64 overflow-y-auto mb-6 pr-2"></div>
+            <div class="flex justify-between items-end border-t border-gray-700 pt-6 mb-8">
+                <span class="text-gray-400 font-medium">Total:</span>
+                <h2 id="cart-total-price" class="text-3xl font-bold text-white">$0.00</h2>
+            </div>
+            <button id="checkout-btn"
+                class="w-full bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 rounded-lg transition">Proceed to
+                Checkout</button>
+        </div>
+    </div>
+
+    <script src="js/shared.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>

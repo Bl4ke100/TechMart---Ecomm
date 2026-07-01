@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechMart Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* kept the snap scrolling for your carousel, but made the scrollbar match the dark theme */
+        .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; border-radius: 0.5rem; }
+        .carousel img { scroll-snap-align: center; max-width: 100%; height: 400px; object-fit: contain; background: #1f2937; border-radius: 0.5rem; flex: 0 0 100%; border: 1px solid #374151; }
+        .carousel::-webkit-scrollbar { height: 8px; }
+        .carousel::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+<nav class="flex items-center justify-between p-5 bg-gray-800 shadow-md">
+    <div class="text-2xl font-bold text-white tracking-wide">TechMart</div>
+    <div class="flex gap-6 items-center text-sm font-semibold">
+        <a href="shop.html" class="hover:text-gray-300 transition">Back to Shop</a>
+        <button id="cart-btn" class="hover:text-gray-300 transition">Cart (<span id="cart-count">0</span>)</button>
+    </div>
+</nav>
+
+<main class="max-w-5xl mx-auto p-6 mt-8">
+    <div id="product-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-700">
+    </div>
+</main>
+
+<div id="cart-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md relative border border-gray-700">
+        <button class="close-btn absolute top-4 right-5 text-gray-400 hover:text-white text-2xl">&times;</button>
+        <h3 class="text-xl font-bold mb-6 text-white">Your Shopping Cart</h3>
+        <div id="cart-items-list" class="space-y-4 max-h-64 overflow-y-auto mb-6 pr-2"></div>
+        <div class="flex justify-between items-end border-t border-gray-700 pt-6 mb-8">
+            <span class="text-gray-400 font-medium">Total:</span>
+            <h2 id="cart-total-price" class="text-3xl font-bold text-white">$0.00</h2>
+        </div>
+        <button id="checkout-btn" class="w-full bg-white text-gray-900 hover:bg-gray-200 font-bold py-3 rounded-lg transition">Proceed to Checkout</button>
+    </div>
+</div>
+
+<script src="js/shared.js"></script>
+<script src="js/product.js"></script>
+</body>
+</html>
