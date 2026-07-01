@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <jdbc-connection-pool 
+        name="techmartDBPool" 
+        res-type="javax.sql.DataSource" 
+        datasource-classname="com.mysql.cj.jdbc.MysqlDataSource"
+        steady-pool-size="20"
+        max-pool-size="200"
+        max-wait-time-in-millis="5000"
+        pool-resize-quantity="10"
+        idle-timeout-in-seconds="300"
+        statement-timeout-in-seconds="30"
+        connection-validation-method="auto-commit"
+        is-connection-validation-required="true"
+        ping="true"
+        wrap-jdbc-objects="false">
+        
+        <!-- Assuming standard local MySQL settings, User should adjust in their environment if different -->
+        <property name="serverName" value="localhost"/>
+        <property name="portNumber" value="3306"/>
+        <property name="databaseName" value="techmart"/>
+        <property name="user" value="root"/>
+        <property name="password" value=""/>
+        <property name="URL" value="jdbc:mysql://localhost:3306/techmart?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"/>
+    </jdbc-connection-pool>
+
+    <jdbc-resource 
+        enabled="true" 
+        jndi-name="java:global/jdbc/techmartDB" 
+        object-type="user" 
+        pool-name="techmartDBPool"/>
+</resources>

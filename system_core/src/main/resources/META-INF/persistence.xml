@@ -15,6 +15,15 @@
             <!-- EclipseLink specific properties for Payara to auto-create schema if needed, but we provided schema.sql -->
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <property name="eclipselink.logging.level" value="FINE"/>
+            
+            <!-- Database Connection Optimization & Performance Settings -->
+            <!-- Enable Level 2 (Shared) Cache for entities to reduce database hits -->
+            <property name="eclipselink.cache.shared.default" value="true"/>
+            <property name="eclipselink.cache.size.default" value="1000"/>
+            
+            <!-- Enable JDBC batch writing for massive concurrent order processing -->
+            <property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
+            <property name="eclipselink.jdbc.batch-writing.size" value="100"/>
         </properties>
     </persistence-unit>
 </persistence>

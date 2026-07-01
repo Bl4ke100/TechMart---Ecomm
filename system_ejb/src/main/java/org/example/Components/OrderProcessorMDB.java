@@ -7,8 +7,11 @@ import jakarta.ejb.EJB;
 import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
 import jakarta.jms.ObjectMessage;
+import jakarta.jms.JMSContext;
+import jakarta.jms.Topic;
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
 import org.example.service.InventoryService;
-import org.example.service.NotifyService;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/OrderQueue"),
@@ -19,8 +22,11 @@ public class OrderProcessorMDB implements MessageListener {
     @EJB
     private InventoryService inventoryService;
 
-    @EJB
-    private NotifyService notifyService;
+    @Inject
+    private JMSContext jmsContext;
+
+    @Resource(lookup = "jms/OrderTopic", mappedName = "jms/OrderTopic")
+    private Topic orderTopic;
 
     @jakarta.persistence.PersistenceContext(unitName = "techmartPU")
     private jakarta.persistence.EntityManager em;
@@ -41,8 +47,9 @@ public class OrderProcessorMDB implements MessageListener {
                 em.persist(order);
                 System.out.println("[MDB] Payment processed and order persisted successfully.");
                 
-                notifyService.sendOrderConfirmation(order.getUsername(), order.getOrderId());
-                notifyService.sendShippingUpdate(order.getUsername(), order.getOrderId(), "Processing");
+                // Publish to Topic for decoupled processing
+                System.out.println("[MDB] Publishing order to JMS Topic: jms/OrderTopic");
+                jmsContext.createProducer().send(orderTopic, order);
                 
                 System.out.println("[MDB] Order processing completed.");
             }

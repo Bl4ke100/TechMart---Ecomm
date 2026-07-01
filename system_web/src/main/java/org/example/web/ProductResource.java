@@ -62,6 +62,14 @@ public class ProductResource {
         }
         boolean deleted = productService.deleteProduct(id);
         if (deleted) {
+            java.io.File dir = new java.io.File("d:/Uni Stuff/BCD/auction_system/auction_system/product-images/" + id);
+            if (dir.exists()) {
+                java.io.File[] files = dir.listFiles();
+                if (files != null) {
+                    for (java.io.File f : files) f.delete();
+                }
+                dir.delete();
+            }
             return jakarta.ws.rs.core.Response.ok("{\"message\":\"Product deleted\"}").build();
         }
         return jakarta.ws.rs.core.Response.status(jakarta.ws.rs.core.Response.Status.NOT_FOUND).build();

@@ -3,31 +3,39 @@ package org.example.Components;
 import org.example.service.NotifyService;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.Asynchronous;
+import jakarta.ejb.AsyncResult;
+import java.util.concurrent.Future;
 
 @Stateless
 public class NotifyServImpl implements NotifyService {
 
     @Override
     @Asynchronous
-    public void sendOrderConfirmation(String username, int orderId) {
+    public Future<Boolean> sendOrderConfirmation(String username, int orderId) {
         System.out.println("[Async Notification] Starting order confirmation process for User: " + username + ", Order ID: " + orderId);
         try {
-            Thread.sleep(2000);
+            // Simulate variable latency (could be fast, could hang)
+            long sleepTime = (long) (Math.random() * 5000); 
+            Thread.sleep(sleepTime);
+            System.out.println("[Async Notification] Order confirmation sent to " + username + " for Order ID: " + orderId);
+            return new AsyncResult<>(true);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return new AsyncResult<>(false);
         }
-        System.out.println("[Async Notification] Order confirmation sent to " + username + " for Order ID: " + orderId);
     }
 
     @Override
     @Asynchronous
-    public void sendShippingUpdate(String username, int orderId, String status) {
+    public Future<Boolean> sendShippingUpdate(String username, int orderId, String status) {
         System.out.println("[Async Notification] Starting shipping update process for User: " + username + ", Order ID: " + orderId + ", Status: " + status);
         try {
-            Thread.sleep(1500);
+            Thread.sleep(1000);
+            System.out.println("[Async Notification] Shipping update sent to " + username + " for Order ID: " + orderId + " - Status: " + status);
+            return new AsyncResult<>(true);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return new AsyncResult<>(false);
         }
-        System.out.println("[Async Notification] Shipping update sent to " + username + " for Order ID: " + orderId + " - Status: " + status);
     }
 }
