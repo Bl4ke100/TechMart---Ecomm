@@ -12,6 +12,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
+/**
+ * Stateless Session Bean handling order processing.
+ * Designed to be highly scalable using container-managed pooling.
+ * Offloads heavy database operations to asynchronous JMS Queues.
+ */
 @Stateless
 public class OrderServiceImpl implements OrderService {
 
@@ -24,6 +29,12 @@ public class OrderServiceImpl implements OrderService {
     @PersistenceContext(unitName = "techmartPU")
     private EntityManager em;
 
+    /**
+     * Publishes an incoming web order to the JMS Queue for asynchronous processing.
+     * This ensures the HTTP request threads are not blocked by database transactions.
+     * 
+     * @param order The order entity to process.
+     */
     @Override
     public void placeOrder(Order order) {
         System.out.println("Publishing order to JMS Queue for async processing: Order ID " + order.getOrderId());

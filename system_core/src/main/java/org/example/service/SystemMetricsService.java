@@ -7,5 +7,7 @@ import java.util.Map;
 public interface SystemMetricsService {
     void incrementSession();
     void decrementSession();
+    void incrementProcessedJmsMessage();
+    void incrementFailedJmsMessage();
     Map<String, Object> getSystemMetrics();
 }

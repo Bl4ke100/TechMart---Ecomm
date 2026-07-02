@@ -12,7 +12,14 @@ import jakarta.jms.Topic;
 import jakarta.annotation.Resource;
 import jakarta.inject.Inject;
 import org.example.service.InventoryService;
+import org.example.service.SystemMetricsService;
 
+/**
+ * Message-Driven Bean (MDB) responsible for asynchronous order fulfillment.
+ * Listens to the Point-to-Point jms/OrderQueue, executes JPA transactions,
+ * and publishes events to the jms/OrderTopic for downstream notification services.
+ * Performance is optimized by removing blocking database calls from the web tier.
+ */
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/OrderQueue"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue")
@@ -30,6 +37,9 @@ public class OrderProcessorMDB implements MessageListener {
 
     @jakarta.persistence.PersistenceContext(unitName = "techmartPU")
     private jakarta.persistence.EntityManager em;
+
+    @EJB
+    private SystemMetricsService metricsService;
 
     @Override
     public void onMessage(Message message) {
@@ -52,10 +62,12 @@ public class OrderProcessorMDB implements MessageListener {
                 jmsContext.createProducer().send(orderTopic, order);
                 
                 System.out.println("[MDB] Order processing completed.");
+                metricsService.incrementProcessedJmsMessage();
             }
         } catch (Exception e) {
             System.err.println("[MDB] Error processing order message:");
             e.printStackTrace();
+            metricsService.incrementFailedJmsMessage();
         }
     }
 }

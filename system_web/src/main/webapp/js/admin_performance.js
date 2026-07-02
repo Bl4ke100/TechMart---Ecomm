@@ -49,6 +49,25 @@ async function loadSystemMetrics() {
             
             // Uptime
             document.getElementById('metric-uptime').textContent = currentMetrics.uptime;
+            
+            // Advanced Metrics
+            document.getElementById('metric-cpu-cores').textContent = currentMetrics.cpuCores;
+            document.getElementById('metric-cpu-load').textContent = currentMetrics.systemCpuLoad;
+            
+            // Database Latency
+            const dbLatencyEl = document.getElementById('metric-db-latency');
+            dbLatencyEl.textContent = currentMetrics.dbLatencyMs;
+            if (currentMetrics.dbStatus === 'ERROR') {
+                dbLatencyEl.className = "text-3xl font-bold text-red-500";
+            } else if (currentMetrics.dbLatencyMs > 50) {
+                dbLatencyEl.className = "text-3xl font-bold text-amber-500";
+            } else {
+                dbLatencyEl.className = "text-3xl font-bold text-emerald-400";
+            }
+            
+            // JMS
+            document.getElementById('metric-jms').textContent = currentMetrics.jmsProcessed;
+            document.getElementById('metric-jms-failed').textContent = currentMetrics.jmsFailed;
         }
     } catch(e) {
         console.error("Failed to fetch system metrics", e);
@@ -60,7 +79,7 @@ function exportPerformanceStats() {
         alert("Performance metrics are not yet loaded!");
         return;
     }
-    const headers = ["Timestamp", "JVM Heap Used (MB)", "JVM Heap Max (MB)", "Active Threads", "Peak Threads", "Active Cart Sessions", "System Uptime"];
+    const headers = ["Timestamp", "JVM Heap Used (MB)", "JVM Heap Max (MB)", "Active Threads", "Peak Threads", "Active Cart Sessions", "System Uptime", "CPU Cores", "CPU Load Avg", "DB Latency (ms)", "JMS Processed", "JMS Failed"];
     const row = [
         new Date().toISOString(),
         currentMetrics.heapUsedMB,
@@ -68,7 +87,12 @@ function exportPerformanceStats() {
         currentMetrics.activeThreads,
         currentMetrics.peakThreads,
         currentMetrics.activeSessions,
-        currentMetrics.uptime
+        currentMetrics.uptime,
+        currentMetrics.cpuCores,
+        currentMetrics.systemCpuLoad,
+        currentMetrics.dbLatencyMs,
+        currentMetrics.jmsProcessed,
+        currentMetrics.jmsFailed
     ];
     
     let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + row.join(",");

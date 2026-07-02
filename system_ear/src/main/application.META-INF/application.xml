@@ -4,7 +4,7 @@
              http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd"
              version="7">
 
-    <display-name>Auction System EAR</display-name>
+    <display-name>TechMart EAR</display-name>
 
     <module>
         <ejb>system_ejb.jar</ejb>

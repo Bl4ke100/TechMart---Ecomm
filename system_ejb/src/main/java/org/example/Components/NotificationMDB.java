@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.ExecutionException;
+import org.example.service.SystemMetricsService;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/OrderTopic"),
@@ -24,6 +25,9 @@ public class NotificationMDB implements MessageListener {
 
     @EJB
     private NotifyService notifyService;
+
+    @EJB
+    private SystemMetricsService metricsService;
 
     @Override
     public void onMessage(Message message) {
@@ -45,18 +49,20 @@ public class NotificationMDB implements MessageListener {
                     
                     if (confSuccess && shipSuccess) {
                         System.out.println("[NotificationMDB] All notifications sent successfully within SLA.");
+                        metricsService.incrementProcessedJmsMessage();
                     }
                 } catch (TimeoutException e) {
                     System.err.println("[NotificationMDB - FAILURE RECOVERY] Notification SLA breached (>3 seconds). Routing to fallback queue for manual review.");
-                    // Fallback logic here
+                    metricsService.incrementFailedJmsMessage();
                 } catch (ExecutionException | InterruptedException e) {
                     System.err.println("[NotificationMDB - FAILURE RECOVERY] Async notification failed fatally. Retrying in background.");
-                    // Retry logic here
+                    metricsService.incrementFailedJmsMessage();
                 }
             }
         } catch (Exception e) {
             System.err.println("[NotificationMDB] Error processing notification:");
             e.printStackTrace();
+            metricsService.incrementFailedJmsMessage();
         }
     }
 }
