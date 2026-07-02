@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         
         authError.textContent = '';
+        authError.classList.add('hidden');
         
         try {
             const response = await fetch(`${API_BASE}/auth`, {
@@ -46,12 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const errData = await response.json();
                     authError.textContent = errData.error || 'Invalid credentials.';
+                    authError.classList.remove('hidden');
                 } catch(e) {
                     authError.textContent = 'Invalid credentials.';
+                    authError.classList.remove('hidden');
                 }
             }
         } catch (error) {
             authError.textContent = 'Network error. Make sure server is running.';
+            authError.classList.remove('hidden');
         }
     });
 
@@ -63,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         regError.textContent = '';
         regError.style.color = 'red';
+        regError.classList.add('hidden');
         
         try {
             const response = await fetch(`${API_BASE}/auth/register`, {
@@ -74,12 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 regError.style.color = 'green';
                 regError.textContent = 'Success! Please login.';
+                regError.classList.remove('hidden');
                 setTimeout(() => document.getElementById('show-login').click(), 1500);
             } else {
                 regError.textContent = 'Username already exists or invalid data.';
+                regError.classList.remove('hidden');
             }
         } catch (error) {
             regError.textContent = 'Network error.';
+            regError.classList.remove('hidden');
         }
     });
 });

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <admin-object-resource res-type="jakarta.jms.Topic" res-adapter="jmsra" jndi-name="jms/OrderTopic">
+        <property name="Name" value="OrderTopic"/>
+    </admin-object-resource>
+</resources>

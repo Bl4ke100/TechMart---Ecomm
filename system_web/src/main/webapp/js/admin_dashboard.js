@@ -43,7 +43,7 @@ async function loadDashboardMetrics() {
                     <td class="py-3 px-4 text-blue-400 font-medium">@${o.username}</td>
                     <td class="py-3 px-4 text-gray-300">${o.productId}</td>
                     <td class="py-3 px-4 text-gray-300">${o.quantity}</td>
-                    <td class="py-3 px-4 text-gray-500 text-xs">${new Date(o.orderDate).toLocaleString()}</td>
+                    <td class="py-3 px-4 text-gray-500 text-xs">${new Date(o.orderDate.replace(/\\[.*?\\]/, '')).toLocaleString()}</td>
                     <td class="py-3 px-4 text-right">
                         <span class="bg-green-500/10 text-green-400 px-2.5 py-1 rounded-full text-xs font-semibold">${o.status}</span>
                     </td>
@@ -73,7 +73,7 @@ function exportToCSV() {
         return;
     }
     const headers = ["Order ID", "Product ID", "Username", "Quantity", "Date", "Status"];
-    const rows = allOrders.map(o => [o.orderId, o.productId, o.username, o.quantity, new Date(o.orderDate).toISOString(), o.status]);
+    const rows = allOrders.map(o => [o.orderId, o.productId, o.username, o.quantity, new Date(o.orderDate.replace(/\\[.*?\\]/, '')).toISOString(), o.status]);
     
     let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
     const encodedUri = encodeURI(csvContent);

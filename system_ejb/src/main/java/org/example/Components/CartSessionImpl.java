@@ -79,7 +79,6 @@ public class CartSessionImpl implements CartSession {
         Random rand = new Random();
         for (Product item : cartItems) {
             Order order = new Order();
-            order.setOrderId(rand.nextInt(10000));
             order.setProductId(item.getId());
             order.setUsername(username);
             order.setQuantity(1);

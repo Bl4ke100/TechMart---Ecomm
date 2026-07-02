@@ -42,11 +42,14 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByUser(String username) {
         return em.createQuery("SELECT o FROM Order o WHERE o.username = :username ORDER BY o.orderDate DESC", Order.class)
                  .setParameter("username", username)
+                 .setHint("jakarta.persistence.cache.retrieveMode", jakarta.persistence.CacheRetrieveMode.BYPASS)
                  .getResultList();
     }
 
     @Override
     public List<Order> getAllOrders() {
-        return em.createQuery("SELECT o FROM Order o ORDER BY o.orderDate DESC", Order.class).getResultList();
+        return em.createQuery("SELECT o FROM Order o ORDER BY o.orderDate DESC", Order.class)
+                 .setHint("jakarta.persistence.cache.retrieveMode", jakarta.persistence.CacheRetrieveMode.BYPASS)
+                 .getResultList();
     }
 }

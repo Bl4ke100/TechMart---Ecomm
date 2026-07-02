@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <!-- Optimized JDBC Connection Pool -->
+    <jdbc-connection-pool name="techmartDBPool"
+                          datasource-classname="com.mysql.cj.jdbc.MysqlDataSource"
+                          res-type="javax.sql.DataSource"
+                          steady-pool-size="20"
+                          max-pool-size="200"
+                          pool-resize-quantity="10"
+                          idle-timeout-in-seconds="300"
+                          statement-timeout-in-seconds="30"
+                          connection-validation-method="auto-commit"
+                          is-connection-validation-required="true"
+                          ping="true">
+        <property name="databaseName" value="techmartdb"/>
+        <property name="user" value="root"/>
+        <property name="password" value="1234"/>
+        <property name="URL" value="jdbc:mysql://localhost:3306/techmartdb?useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+    </jdbc-connection-pool>
+
+    <!-- JDBC Resource Binding -->
+    <jdbc-resource jndi-name="java:app/jdbc/techmartDB" pool-name="techmartDBPool"/>
+
+    <!-- JMS Topic -->
+    <admin-object-resource res-type="jakarta.jms.Topic" res-adapter="jmsra" jndi-name="jms/OrderTopic">
+        <property name="Name" value="OrderTopic"/>
+    </admin-object-resource>
+</resources>

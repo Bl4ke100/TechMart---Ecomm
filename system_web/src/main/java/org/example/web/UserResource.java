@@ -22,7 +22,13 @@ public class UserResource {
             return Response.status(Response.Status.FORBIDDEN).entity("{\"error\":\"Access Denied\"}").build();
         }
         List<User> users = userService.getAllUsers();
-        return Response.ok(users).build();
+        List<User> safeUsers = new java.util.ArrayList<>();
+        for (User u : users) {
+            User safe = new User(u.getUsername(), "", u.getEmail(), u.getRole());
+            safe.setId(u.getId());
+            safeUsers.add(safe);
+        }
+        return Response.ok(safeUsers).build();
     }
 
     @DELETE
@@ -44,8 +50,9 @@ public class UserResource {
         if (!username.equals(requester)) return Response.status(Response.Status.FORBIDDEN).build();
         User user = userService.getUserByUsername(username);
         if (user != null) {
-            user.setPassword("");
-            return Response.ok(user).build();
+            User safeUser = new User(user.getUsername(), "", user.getEmail(), user.getRole());
+            safeUser.setId(user.getId());
+            return Response.ok(safeUser).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }

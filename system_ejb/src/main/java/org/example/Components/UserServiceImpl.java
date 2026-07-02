@@ -7,15 +7,6 @@ import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.NoResultException;
-import jakarta.annotation.sql.DataSourceDefinition;
-
-@DataSourceDefinition(
-    name = "java:global/jdbc/techmartDB",
-    className = "com.mysql.cj.jdbc.MysqlDataSource",
-    user = "root",
-    password = "1234",
-    url = "jdbc:mysql://localhost:3306/techmartdb?useSSL=false&allowPublicKeyRetrieval=true"
-)
 @Stateless
 public class UserServiceImpl implements UserService {
 
@@ -24,14 +15,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User authenticate(String username, String password) {
+        System.out.println("[AUTH DEBUG] Attempting to authenticate user: '" + username + "' with password: '" + password + "'");
         try {
-            return em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class)
+            User u = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class)
                      .setParameter("username", username)
                      .setParameter("password", password)
+                     .setHint("jakarta.persistence.cache.retrieveMode", jakarta.persistence.CacheRetrieveMode.BYPASS)
                      .getSingleResult();
+            System.out.println("[AUTH DEBUG] SUCCESS! Found user in DB: ID=" + u.getId() + ", Role=" + u.getRole());
+            return u;
         } catch (NoResultException e) {
+            System.out.println("[AUTH DEBUG] FAILED: NoResultException thrown! The database returned 0 rows for username='" + username + "' and password='" + password + "'. Please check if the user physically exists in the techmartdb.users table with these exact credentials.");
             return null;
         } catch (Exception e) {
+            System.out.println("[AUTH DEBUG] SEVERE EXCEPTION during authentication:");
             e.printStackTrace();
             throw new RuntimeException(e.getMessage() != null ? e.getMessage() : e.toString());
         }
