@@ -15,7 +15,7 @@ import org.example.service.InventoryService;
 import org.example.service.SystemMetricsService;
 
 /**
- * Message-Driven Bean (MDB) responsible for asynchronous order fulfillment.
+ * Message-Driven Bean (MDB) responsible for asycnhronous order fulfillment.
  * Listens to the Point-to-Point jms/OrderQueue, executes JPA transactions,
  * and publishes events to the jms/OrderTopic for downstream notification services.
  * Performance is optimized by removing blocking database calls from the web tier.
@@ -57,7 +57,6 @@ public class OrderProcessorMDB implements MessageListener {
                 em.persist(order);
                 System.out.println("[MDB] Payment processed and order persisted successfully.");
                 
-                // Publish to Topic for decoupled processing
                 System.out.println("[MDB] Publishing order to JMS Topic: jms/OrderTopic");
                 jmsContext.createProducer().send(orderTopic, order);
                 

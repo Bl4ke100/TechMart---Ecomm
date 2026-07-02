@@ -22,8 +22,8 @@ import jakarta.persistence.Query;
 import org.example.service.SystemMetricsService;
 
 /**
- * Singleton Session Bean managing global system telemetry.
- * Utilizes @Startup to eagerly load JMX beans into memory during server boot.
+ * Singleton Session Bean maneging global system telemetry.
+ * Utalizes @Startup to eagerly load JMX beans into memory during server boot.
  * Employs thread-safe Atomic variables to track statistics linearly without 
  * locking bottlenecks, ensuring high scalability under heavy user concurrency.
  */
@@ -71,35 +71,28 @@ public class SystemMetricsSingleton implements SystemMetricsService {
     public Map<String, Object> getSystemMetrics() {
         Map<String, Object> metrics = new HashMap<>();
         
-        // Memory Metrics (Convert bytes to MB)
         long heapUsed = memoryBean.getHeapMemoryUsage().getUsed() / (1024 * 1024);
         long heapMax = memoryBean.getHeapMemoryUsage().getMax() / (1024 * 1024);
         metrics.put("heapUsedMB", heapUsed);
         metrics.put("heapMaxMB", heapMax);
         
-        // Thread Metrics
         metrics.put("activeThreads", threadBean.getThreadCount());
         metrics.put("peakThreads", threadBean.getPeakThreadCount());
         
-        // Uptime (Milliseconds to descriptive string)
         long uptimeMs = runtimeBean.getUptime();
         long hours = (uptimeMs / (1000 * 60 * 60)) % 24;
         long minutes = (uptimeMs / (1000 * 60)) % 60;
         long seconds = (uptimeMs / 1000) % 60;
         metrics.put("uptime", String.format("%02dh %02dm %02ds", hours, minutes, seconds));
         
-        // Custom EJB Metrics
         metrics.put("activeSessions", activeCartSessions.get());
         
-        // Advanced OS Metrics
         metrics.put("cpuCores", osBean.getAvailableProcessors());
         metrics.put("systemCpuLoad", String.format("%.2f", osBean.getSystemLoadAverage()));
 
-        // JMS Metrics
         metrics.put("jmsProcessed", processedJmsMessages.get());
         metrics.put("jmsFailed", failedJmsMessages.get());
 
-        // Database Latency (Ping)
         long dbStart = System.currentTimeMillis();
         try {
             Query q = em.createNativeQuery("SELECT 1");

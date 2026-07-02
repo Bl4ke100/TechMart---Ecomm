@@ -38,12 +38,10 @@ public class NotificationMDB implements MessageListener {
                 
                 System.out.println("[NotificationMDB - Durable] Received processed order event for Order ID: " + order.getOrderId());
                 
-                // Trigger async processes
                 Future<Boolean> confFuture = notifyService.sendOrderConfirmation(order.getUsername(), order.getOrderId());
                 Future<Boolean> shipFuture = notifyService.sendShippingUpdate(order.getUsername(), order.getOrderId(), "Processing");
                 
                 try {
-                    // Enforce a strict 3-second SLA on the email provider
                     boolean confSuccess = confFuture.get(3, TimeUnit.SECONDS);
                     boolean shipSuccess = shipFuture.get(3, TimeUnit.SECONDS);
                     

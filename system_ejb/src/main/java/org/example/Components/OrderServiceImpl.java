@@ -13,7 +13,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Stateless Session Bean handling order processing.
+ * Stateless Session Bean handeling order processing.
  * Designed to be highly scalable using container-managed pooling.
  * Offloads heavy database operations to asynchronous JMS Queues.
  */
