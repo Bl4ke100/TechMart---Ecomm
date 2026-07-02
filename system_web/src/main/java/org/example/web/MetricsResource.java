@@ -1,37 +1,34 @@
 package org.example.web;
 
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.util.HashMap;
-import java.util.Map;
+import jakarta.ws.rs.core.Response;
+import org.example.service.SystemMetricsService;
 
 @Path("/metrics")
 @Produces(MediaType.APPLICATION_JSON)
+@jakarta.ejb.Stateless
 public class MetricsResource {
 
+    @EJB
+    private SystemMetricsService metricsSingleton;
+
     @GET
-    public jakarta.ws.rs.core.Response getMetrics() {
-        Map<String, Object> metrics = new HashMap<>();
+    public Response getSystemMetrics(@HeaderParam("X-Role") String role) {
+        // Strict security: Only ADMIN can view internal system health
+        if (!"ADMIN".equals(role)) {
+            return Response.status(Response.Status.FORBIDDEN).entity("{\"error\":\"Access Denied\"}").build();
+        }
         
-        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-        
-        metrics.put("systemLoadAverage", osBean.getSystemLoadAverage());
-        metrics.put("availableProcessors", osBean.getAvailableProcessors());
-        
-        Runtime runtime = Runtime.getRuntime();
-        long maxMemory = runtime.maxMemory();
-        long allocatedMemory = runtime.totalMemory();
-        long freeMemory = runtime.freeMemory();
-        
-        metrics.put("maxMemoryMB", maxMemory / (1024 * 1024));
-        metrics.put("allocatedMemoryMB", allocatedMemory / (1024 * 1024));
-        metrics.put("freeMemoryMB", freeMemory / (1024 * 1024));
-        metrics.put("usedMemoryMB", (allocatedMemory - freeMemory) / (1024 * 1024));
-        
-        return jakarta.ws.rs.core.Response.ok(metrics).build();
+        try {
+            return Response.ok(metricsSingleton.getSystemMetrics()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

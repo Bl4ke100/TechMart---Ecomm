@@ -4,6 +4,7 @@ import org.example.model.Product;
 import org.example.model.Order;
 import org.example.service.CartSession;
 import org.example.service.OrderService;
+import org.example.service.SystemMetricsService;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Remove;
@@ -26,11 +27,15 @@ public class CartSessionImpl implements CartSession {
     
     @EJB
     private OrderService orderService;
+    
+    @EJB
+    private SystemMetricsService systemMetrics;
 
     @PostConstruct
     public void init() {
         logger = Logger.getLogger(CartSessionImpl.class.getName());
         sessionStartTime = System.currentTimeMillis();
+        systemMetrics.incrementSession();
         logger.info("[Lifecycle: @PostConstruct] CartSession initialized for optimal performance.");
     }
 
@@ -51,6 +56,7 @@ public class CartSessionImpl implements CartSession {
     public void endSession() {
         long duration = System.currentTimeMillis() - sessionStartTime;
         logger.info("[Lifecycle: @Remove] Destroying CartSession. Session lasted " + duration + " ms.");
+        systemMetrics.decrementSession();
         cartItems.clear();
     }
 

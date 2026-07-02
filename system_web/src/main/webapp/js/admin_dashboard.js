@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     loadDashboardMetrics();
+    
+    document.getElementById('export-stats-btn').addEventListener('click', exportPlatformStats);
     document.getElementById('export-csv-btn').addEventListener('click', exportToCSV);
 });
 
@@ -65,6 +67,29 @@ async function loadDashboardMetrics() {
             el.classList.remove('animate-pulse');
         }
     } catch (e) { console.error(e); }
+}
+
+function exportPlatformStats() {
+    const elOrders = document.getElementById('total-orders').textContent;
+    const elUsers = document.getElementById('total-users').textContent;
+    const elProducts = document.getElementById('total-products').textContent;
+    
+    if (elOrders === "...") {
+        alert("Stats are not yet loaded!");
+        return;
+    }
+    
+    const headers = ["Timestamp", "Total Orders", "Total Users", "Total Products"];
+    const row = [new Date().toISOString(), elOrders, elUsers, elProducts];
+    
+    let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + row.join(",");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "platform_stats_summary.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function exportToCSV() {
