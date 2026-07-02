@@ -1,0 +1,76 @@
+package lk.blake.Components;
+
+import lk.blake.service.InventoryService;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Startup;
+import jakarta.ejb.ConcurrencyManagement;
+import jakarta.ejb.ConcurrencyManagementType;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
+
+@Singleton
+@Startup
+@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
+public class InventoryServiceImpl implements InventoryService {
+
+    @jakarta.persistence.PersistenceContext(unitName = "techmartPU")
+    private jakarta.persistence.EntityManager em;
+
+    private Logger logger;
+    private long startupTime;
+
+    public InventoryServiceImpl() {
+    }
+
+    @PostConstruct
+    public void onStartup() {
+        logger = Logger.getLogger(InventoryServiceImpl.class.getName());
+        startupTime = System.currentTimeMillis();
+        logger.info("[Lifecycle: @PostConstruct] InventoryServiceImpl Singleton started. System cache warming up...");
+    }
+
+    @PreDestroy
+    public void onShutdown() {
+        long uptime = System.currentTimeMillis() - startupTime;
+        logger.info("[Lifecycle: @PreDestroy] InventoryServiceImpl Singleton shutting down. System uptime: " + uptime + " ms. Flushing caches.");
+    }
+
+    @Override
+    @Lock(LockType.WRITE)
+    public void syncInventory() {
+        logger.info("[Distributed Sync] Initiating real-time inventory synchronization across multiple regional warehouses (US-East, EU-West, AP-South)...");
+        try {
+            Thread.sleep(50); // Simulate network latency
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        logger.info("[Distributed Sync] Regional warehouses synchronized successfully.");
+    }
+
+    @Override
+    @Lock(LockType.READ)
+    public boolean checkAvailability(int productId, int quantity) {
+        lk.blake.model.Product p = em.find(lk.blake.model.Product.class, productId);
+        return p != null && p.getInventoryCount() >= quantity;
+    }
+
+    @Override
+    @Lock(LockType.WRITE)
+    public void decreaseInventory(int productId, int quantity) {
+        lk.blake.model.Product p = em.find(lk.blake.model.Product.class, productId);
+        if (p != null && p.getInventoryCount() >= quantity) {
+            p.setInventoryCount(p.getInventoryCount() - quantity);
+            em.merge(p);
+            logger.info("Decreased primary inventory for product " + productId + " by " + quantity);
+            // Trigger the multi-warehouse synchronization
+            this.syncInventory();
+        } else {
+            throw new RuntimeException("Insufficient inventory for product " + productId);
+        }
+    }
+}

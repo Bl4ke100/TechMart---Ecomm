@@ -8,9 +8,9 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/techmartDB</jta-data-source>
         
-        <class>org.example.model.Product</class>
-        <class>org.example.model.Order</class>
-        <class>org.example.model.User</class>
+        <class>lk.blake.model.Product</class>
+        <class>lk.blake.model.Order</class>
+        <class>lk.blake.model.User</class>
 
         <properties>
             <!-- EclipseLink specific properties for Payara to auto-create schema if needed, but we provided schema.sql -->

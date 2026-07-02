@@ -52,11 +52,11 @@ function renderProduct() {
             
             <div style="display:flex; gap: 1rem; align-items:center; margin-bottom: 1rem;">
                 <label for="qty" style="color:white; font-weight:bold;">Quantity:</label>
-                <input type="number" id="qty" value="1" min="1" max="${currentProduct.inventoryCount}" style="width: 80px; padding: 10px; border-radius: 5px;" ${currentProduct.inventoryCount === 0 ? 'disabled' : ''}>
+                <input type="number" id="qty" value="1" min="1" max="${currentProduct.inventoryCount}" style="width: 80px; padding: 10px; border-radius: 5px; color: black; background: white;" ${currentProduct.inventoryCount === 0 ? 'disabled' : ''}>
             </div>
             
             <div style="display:flex; gap: 1rem; margin-top: 1rem;">
-                <button class="btn btn-primary" onclick="addToCartQty()" style="flex: 1;" ${currentProduct.inventoryCount === 0 ? 'disabled' : ''}>Add to Cart</button>
+                <button class="btn btn-primary" onclick="addToCartQty()" style="flex: 1; background: #3b82f6; color: white; border: none;" ${currentProduct.inventoryCount === 0 ? 'disabled' : ''}>Add to Cart</button>
                 <button class="btn" style="flex: 1; background: #ff3366; color: white;" onclick="buyNow()" ${currentProduct.inventoryCount === 0 ? 'disabled' : ''}>Buy Now</button>
             </div>
             <div id="action-msg" style="margin-top:1rem; text-align:center;"></div>

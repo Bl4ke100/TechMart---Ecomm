@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>lk.blake</groupId>
         <artifactId>techmart</artifactId>
         <version>1.0</version>
     </parent>
@@ -14,13 +14,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>lk.blake</groupId>
             <artifactId>sytem_ejb</artifactId>
             <version>1.0</version>
             <type>ejb</type>
         </dependency>
         <dependency>
-            <groupId>org.example</groupId>
+            <groupId>lk.blake</groupId>
             <artifactId>system_web</artifactId>
             <version>1.0</version>
             <type>war</type>
@@ -36,11 +36,11 @@
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <modules>
                         <ejbModule>
-                            <groupId>org.example</groupId>
+                            <groupId>lk.blake</groupId>
                             <artifactId>sytem_ejb</artifactId>
                         </ejbModule>
                         <webModule>
-                            <groupId>org.example</groupId>
+                            <groupId>lk.blake</groupId>
                             <artifactId>system_web</artifactId>
                             <contextRoot>system_web</contextRoot>
                         </webModule>
